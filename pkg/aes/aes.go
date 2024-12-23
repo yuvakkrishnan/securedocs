@@ -9,8 +9,22 @@ import (
 	"io"
 )
 
+// FixKey adjusts the key to the correct length (16, 24, or 32 bytes).
+func fixKey(key string, length int) string {
+	if len(key) > length {
+		return key[:length]
+	}
+	for len(key) < length {
+		key += "0"
+	}
+	return key
+}
+
 // Encrypt encrypts plaintext using AES.
 func Encrypt(plaintext, key string) (string, error) {
+	// Adjust the key to 32 bytes for AES-256
+	key = fixKey(key, 32)
+
 	block, err := aes.NewCipher([]byte(key))
 	if err != nil {
 		return "", err
@@ -28,6 +42,9 @@ func Encrypt(plaintext, key string) (string, error) {
 
 // Decrypt decrypts ciphertext using AES.
 func Decrypt(ciphertext, key string) (string, error) {
+	// Adjust the key to 32 bytes for AES-256
+	key = fixKey(key, 32)
+
 	block, err := aes.NewCipher([]byte(key))
 	if err != nil {
 		return "", err
