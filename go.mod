@@ -1,3 +1,3 @@
-module mymodule
+module securedocs
 
-go 1.20
+go 1.22.10

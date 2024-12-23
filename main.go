@@ -2,48 +2,31 @@ package main
 
 import (
 	"fmt"
-	"encryption-decryption-system/pkg/aes"
-	"encryption-decryption-system/pkg/rsa"
-	"encryption-decryption-system/pkg/keys"
+	"securedocs/pkg/aes"
 )
 
 func main() {
-	// AES Example
-	key := "thisis32bitlongpassphrase!!!" // 32 bytes for AES-256
-	plaintext := "Sensitive Document Content"
+	// Define file paths
+	inputFilePath := "testdata/sample.pdf"         // Input file
+	encryptedFilePath := "testdata/sample.enc"    // Encrypted file
+	decryptedFilePath := "testdata/sample_dec.pdf" // Decrypted file
 
-	encryptedAES, err := aes.Encrypt(plaintext, key)
+	// AES Key (32 bytes for AES-256)
+	key := "thisis32bitlongpassphrase32!"
+
+	// Encrypt the file
+	err := aes.EncryptFile(inputFilePath, encryptedFilePath, key)
 	if err != nil {
-		fmt.Println("Error encrypting AES:", err)
+		fmt.Println("Error encrypting file:", err)
 		return
 	}
-	fmt.Println("AES Encrypted:", encryptedAES)
+	fmt.Println("File encrypted successfully:", encryptedFilePath)
 
-	decryptedAES, err := aes.Decrypt(encryptedAES, key)
+	// Decrypt the file
+	err = aes.DecryptFile(encryptedFilePath, decryptedFilePath, key)
 	if err != nil {
-		fmt.Println("Error decrypting AES:", err)
+		fmt.Println("Error decrypting file:", err)
 		return
 	}
-	fmt.Println("AES Decrypted:", decryptedAES)
-
-	// RSA Example
-	privateKey, publicKey, err := keys.GenerateRSAKeys()
-	if err != nil {
-		fmt.Println("Error generating RSA keys:", err)
-		return
-	}
-
-	encryptedRSA, err := rsa.Encrypt(plaintext, publicKey)
-	if err != nil {
-		fmt.Println("Error encrypting RSA:", err)
-		return
-	}
-	fmt.Println("RSA Encrypted:", encryptedRSA)
-
-	decryptedRSA, err := rsa.Decrypt(encryptedRSA, privateKey)
-	if err != nil {
-		fmt.Println("Error decrypting RSA:", err)
-		return
-	}
-	fmt.Println("RSA Decrypted:", decryptedRSA)
+	fmt.Println("File decrypted successfully:", decryptedFilePath)
 }
